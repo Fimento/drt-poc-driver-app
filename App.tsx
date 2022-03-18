@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { getCurrentPositionAsync, LocationObject, useBackgroundPermissions } from 'expo-location';
+import MapView, { Marker } from 'react-native-maps';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
   const [status, requestPermission] = useBackgroundPermissions();
@@ -23,12 +25,27 @@ export default function App() {
   }, [status]);
 
   return (
-    <View style={styles.container}>
-      <Text>DTR PoC driver APP</Text>
-      {location && <Text>{JSON.stringify(location)}</Text>}
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>DTR PoC driver APP</Text>
+      {location && <MapView
+        style={styles.mapView}
+        initialRegion={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.09,
+          longitudeDelta: 0.04,
+        }}
+      >
+        <Marker
+          coordinate={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          }}
+        />
+      </MapView>}
       {!status?.granted && <Button onPress={requestPermission} title="Give permission" />}
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -39,4 +56,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+  },
+  mapView: {
+    flex: 1,
+    width: '100%',
+  }
 });
