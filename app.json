@@ -25,6 +25,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAsTtvyQaSUPHcEAs7gxJA4OvbQ398Ta-w"
+        }
+      },
       "package": "com.bruno7707.drtpocdriverapp"
     },
     "web": {
