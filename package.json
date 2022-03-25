@@ -21,7 +21,8 @@
     "react-native-maps": "0.29.4",
     "react-native-safe-area-context": "3.3.2",
     "expo-updates": "~0.11.6",
-    "expo-task-manager": "~10.1.0"
+    "expo-task-manager": "~10.1.0",
+    "expo-notifications": "~0.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

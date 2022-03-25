@@ -1,12 +1,49 @@
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { startLocationUpdatesAsync, LocationObject, useForegroundPermissions, watchPositionAsync, stopLocationUpdatesAsync, Accuracy, LocationSubscription } from 'expo-location';
+import { StyleSheet, Text, Button } from 'react-native';
+import {
+  startLocationUpdatesAsync,
+  useForegroundPermissions,
+  watchPositionAsync,
+  stopLocationUpdatesAsync,
+  LocationSubscription,
+  Accuracy,
+  LocationObject,
+} from 'expo-location';
 import { defineTask } from 'expo-task-manager';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Notifications from 'expo-notifications';
 
 const LOCATION_TASK_NAME = 'background-location-task';
+
+const reportPositionAndNotify = async (location: LocationObject) => {
+  const response = await fetch('http://192.168.14.112:3000', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(location),
+  });
+  const data = await response.json() as {
+    notification?: {
+      title: string;
+      body: string;
+    }
+  };
+  if (data.notification) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: data.notification.title,
+        body: data.notification.body,
+      },
+      trigger: {
+        seconds: 1
+      }
+    });
+  }
+}
 
 defineTask<{
   locations: LocationObject[];
@@ -17,14 +54,7 @@ defineTask<{
   }
 
   const latestLocation = data.locations[data.locations.length -1];
-  fetch('http://192.168.14.112:3000', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(latestLocation),
-  }).catch((e) => console.error(e));
+  reportPositionAndNotify(latestLocation).catch((e) => console.error(e));
 });
 
 export default function App() {
