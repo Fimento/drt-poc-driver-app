@@ -11,21 +11,27 @@
     "server": "node server/index.js"
   },
   "dependencies": {
+    "buffer": "^6.0.3",
+    "dotenv": "^16.0.0",
     "expo": "~44.0.0",
+    "expo-dev-client": "~0.8.4",
+    "expo-location": "~14.0.1",
+    "expo-notifications": "~0.14.0",
     "expo-status-bar": "~1.2.0",
+    "expo-task-manager": "~10.1.0",
+    "expo-updates": "~0.11.6",
+    "intl": "^1.2.5",
+    "luxon": "^2.3.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
-    "react-native-web": "0.17.1",
-    "expo-location": "~14.0.1",
     "react-native-maps": "0.29.4",
     "react-native-safe-area-context": "3.3.2",
-    "expo-updates": "~0.11.6",
-    "expo-task-manager": "~10.1.0",
-    "expo-notifications": "~0.14.0"
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@types/luxon": "^2.3.1",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
     "typescript": "~4.3.5"

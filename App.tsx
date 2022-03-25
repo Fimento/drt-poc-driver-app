@@ -3,6 +3,9 @@ import { StyleSheet, Text, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import 'intl';
+import 'intl/locale-data/jsonp/en';
+
 import useUpdatedLocation from './hooks/useUpdatedLocation';
 import useTaskFactory from './hooks/useTask';
 import { startLocationReporting, stopLocationReporting } from './tasks/locationReporting';

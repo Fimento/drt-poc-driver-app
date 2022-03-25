@@ -1,29 +1,50 @@
 import { Accuracy, LocationObject, startLocationUpdatesAsync, stopLocationUpdatesAsync } from 'expo-location';
 import { scheduleNotificationAsync } from 'expo-notifications';
 import { defineTask } from 'expo-task-manager';
+import Constants from 'expo-constants';
+import { Buffer } from 'buffer';
+import { DateTime } from 'luxon';
 
+import { login, sendPosition } from '../apiClient';
+
+const config = Constants.manifest?.extra || {};
 const TASK_NAME = 'location-reporting';
 
+const ref: {
+  token: string | null;
+  expiryDate: DateTime | null;
+} = {
+  token: null,
+  expiryDate: null,
+};
+
+const getTokenExpiryDate = (token: string) => {
+  const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('ascii'));
+  return DateTime.fromSeconds(payload.exp);
+}
+
 const reportPositionAndNotify = async (location: LocationObject) => {
-  const response = await fetch('http://192.168.14.112:3000', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(location),
-  });
-  const data = await response.json() as {
-    notification?: {
-      title: string;
-      body: string;
-    }
-  };
-  if (data.notification) {
+  if (
+    !config.username
+    || !config.password
+    || !config.vehicle
+  ) throw new Error('Missing required environment variables');
+
+  if (
+    !ref.token
+    || !ref.expiryDate
+    || DateTime.now() >= ref.expiryDate.plus({ minutes: 5 })
+  ) {
+    ref.token = await login(config.username, config.password, config.vehicle);
+    ref.expiryDate = getTokenExpiryDate(ref.token);
+  }
+  const { notification } = await sendPosition(location, config.vehicle, ref.token);
+
+  if (notification) {
     await scheduleNotificationAsync({
       content: {
-        title: data.notification.title,
-        body: data.notification.body,
+        title: 'New trip!',
+        body: notification.body,
       },
       trigger: {
         seconds: 1

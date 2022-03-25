@@ -5,10 +5,16 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_URL": "http://192.168.14.112:3000"
+      }
     },
     "preview": {
       "distribution": "internal",
+      "env": {
+        "API_URL": "https://demo.dripbydrt.com/api/suti"
+      },
       "android": {
         "buildType": "apk"
       },
