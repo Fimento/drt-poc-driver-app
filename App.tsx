@@ -14,9 +14,18 @@ export default function App() {
 
     const refreshLocation = async () => {
       const gpsLocation = await getCurrentPositionAsync();
+      fetch('http://192.168.14.112:3000', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(gpsLocation),
+      }).catch((e) => console.error(e));
       setLocation(gpsLocation);
     };
 
+    refreshLocation();
     const intervalId = setInterval(refreshLocation, 5000);
 
     return () => {
