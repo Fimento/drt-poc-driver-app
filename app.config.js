@@ -1,4 +1,4 @@
-import 'dotenv/config';
+require('dotenv').config({ override: true })
 
 export default ({ config }) => {
   return {

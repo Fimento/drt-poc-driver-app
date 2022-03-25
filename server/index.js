@@ -17,7 +17,7 @@ const server = http.createServer((req, res) => {
       })).toString('base64')}.aaa`,
     }))
   } else {
-    req.on('data', (chunk) => console.log('Reported location: ', chunk.toString('utf8')));
+    req.on('data', (chunk) => console.log('Reported location: ', JSON.parse(chunk.toString('utf8'))));
 
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
@@ -30,7 +30,10 @@ const server = http.createServer((req, res) => {
             createdAt: '10:00',
             updatedAt: '10:00',
           }],
-        }
+        },
+        routes: [{
+          route_uuid: 'asdfasdf',
+        }],
       }));
       latestNotificationTimestamp = Date.now();
     } else {
@@ -38,7 +41,10 @@ const server = http.createServer((req, res) => {
         updated_time: '10:00',
         notifications: {
           original: [],
-        }
+        },
+        routes: [{
+          route_uuid: 'asdfasdf',
+        }],
       }));
     }
   }

@@ -27,23 +27,15 @@ export const login = async (username: string, password: string, vehicle: string)
   }
 };
 
-export const sendPosition = async (location: LocationObject, vehicle: string, token: string) => {
+export const sendPosition = async (
+  location: LocationObject,
+  vehicle: string,
+  token: string,
+  routeId: string | null,
+) => {
   const headers = new Headers();
   headers.append('Authorization', `Bearer ${token}`);
-
-  const formdata = new FormData();
-  formdata.append('', JSON.stringify({
-    getFullMessage: true,
-    coordinateList: [{
-      carNumber: vehicle,
-      drive_order_uuid: null,
-      time: location.timestamp,
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      accuracy: location.coords.accuracy,
-      speed: location.coords.speed,
-    }]
-  }));
+  headers.append('content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
   const today = DateTime.now();
 
@@ -56,7 +48,18 @@ export const sendPosition = async (location: LocationObject, vehicle: string, to
   const response = await fetch(`${config.apiUrl}/v1/get-drip-app-message?${queryParams.toString()}`, {
     method: 'POST',
     headers,
-    body: formdata,
+    body: JSON.stringify({
+      getFullMessage: true,
+      coordinateList: [{
+        carNumber: vehicle,
+        drive_order_uuid: routeId,
+        time: location.timestamp,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        accuracy: location.coords.accuracy,
+        speed: location.coords.speed,
+      }]
+    }),
   });
 
   const data = await response.json() as {
@@ -69,6 +72,9 @@ export const sendPosition = async (location: LocationObject, vehicle: string, to
         updatedAt: string;
       }[],
     };
+    routes?: {
+      route_uuid: string;
+    }[];
   };
 
   if (response.status < 400) {
@@ -80,6 +86,7 @@ export const sendPosition = async (location: LocationObject, vehicle: string, to
 
     return {
       notification: latestNotification,
+      routeId: data?.routes?.[data.routes?.length - 1]?.route_uuid || null,
     }
   } else {
     throw new Error(data.error || 'Unexpected error');

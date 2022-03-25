@@ -13,9 +13,11 @@ const TASK_NAME = 'location-reporting';
 const ref: {
   token: string | null;
   expiryDate: DateTime | null;
+  routeId: string | null,
 } = {
   token: null,
   expiryDate: null,
+  routeId: null,
 };
 
 const getTokenExpiryDate = (token: string) => {
@@ -38,7 +40,8 @@ const reportPositionAndNotify = async (location: LocationObject) => {
     ref.token = await login(config.username, config.password, config.vehicle);
     ref.expiryDate = getTokenExpiryDate(ref.token);
   }
-  const { notification } = await sendPosition(location, config.vehicle, ref.token);
+  const { notification, routeId } = await sendPosition(location, config.vehicle, ref.token, ref.routeId);
+  if (routeId) ref.routeId = routeId;
 
   if (notification) {
     await scheduleNotificationAsync({
