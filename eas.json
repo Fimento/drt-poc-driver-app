@@ -4,10 +4,15 @@
   },
   "build": {
     "development": {
-      "developmentClient": true,
       "distribution": "internal",
       "env": {
         "API_URL": "http://192.168.14.112:3000"
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
       }
     },
     "preview": {
