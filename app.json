@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "drt-poc-driver-app",
+    "name": "Drip Driver",
     "slug": "drt-poc-driver-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "primaryColor": "#ffffff",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
