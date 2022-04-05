@@ -53,7 +53,7 @@ export const sendPosition = async (
       coordinateList: [{
         carNumber: vehicle,
         drive_order_uuid: routeId,
-        time: location.timestamp,
+        time: location.timestamp / 1000,
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
         accuracy: location.coords.accuracy,
